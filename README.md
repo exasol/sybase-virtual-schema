@@ -31,7 +31,7 @@ If you want to set up a Virtual Schema for a different database system, please h
 ### Information for Users
 
 * [Virtual Schemas User Guide][virtual-schemas-user-guide]
-* [Sybase Dialect User Guide](doc/user_guide/sybase_user_guide.md)
+* [Sybase Dialect User Guide][sybase-user-guide]
 * [Changelog](doc/changes/changelog.md)
 
 Find all the documentation in the [Virtual Schemas project][vs-doc].
@@ -44,12 +44,12 @@ Find all the documentation in the [Virtual Schemas project][vs-doc].
 
 Running the Virtual Schema requires a Java Runtime version 11 or later.
 
-| Dependency                                                         | Purpose                                                | License                        |
-|--------------------------------------------------------------------|--------------------------------------------------------|--------------------------------|
-| [Exasol Virtual Schema JDBC][virtual-schema-common-jdbc]           | Common JDBC functions for Virtual Schemas adapters     | MIT License                    |
-| [Sybase JDBC Driver]                                               | JDBC driver for Sybase database                        | See Sybase Dialect User Guide  |
-| [Exasol Error Reporting][exasol-error-reporting]                   | Creating unified error messages                        | MIT License                    |
-| [Exasol Database Fundamentals for Java][exasol-db-funtamentals]    | Base objects and ground rules for the Exasol database  | MIT License                    |
+| Dependency                                                         | Purpose                                                | License                                            |
+|--------------------------------------------------------------------|--------------------------------------------------------|----------------------------------------------------|
+| [Exasol Virtual Schema JDBC][virtual-schema-common-jdbc]           | Common JDBC functions for Virtual Schemas adapters     | MIT License                                        |
+| [Sybase JDBC Driver]                                               | JDBC driver for Sybase database                        | See [Sybase Dialect User Guide][sybase-user-guide] |
+| [Exasol Error Reporting][exasol-error-reporting]                   | Creating unified error messages                        | MIT License                                        |
+| [Exasol Database Fundamentals for Java][exasol-db-funtamentals]    | Base objects and ground rules for the Exasol database  | MIT License                                        |
 
 ### Test Dependencies
 
@@ -95,6 +95,7 @@ Running the Virtual Schema requires a Java Runtime version 11 or later.
 [sonatype-oss-index-maven-plugin]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 
 [virtual-schemas-user-guide]: https://docs.exasol.com/database_concepts/virtual_schemas.htm
+[sybase-user-guide]: doc/user_guide/sybase_user_guide.md
 [virtual-schemas]: https://github.com/exasol/virtual-schemas
 [vs-api]: https://github.com/exasol/virtual-schema-common-java/blob/master/doc/development/api/virtual_schema_api.md
 [vs-doc]: https://github.com/exasol/virtual-schemas/tree/master/doc
