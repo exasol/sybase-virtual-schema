@@ -16,8 +16,12 @@ import java.util.*;
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
 import com.exasol.adapter.dialects.*;
+import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
+import com.exasol.adapter.dialects.rewriting.SqlGenerationContext;
 import com.exasol.adapter.jdbc.*;
-import com.exasol.adapter.sql.*;
+import com.exasol.adapter.sql.AggregateFunction;
+import com.exasol.adapter.sql.ScalarFunction;
+import com.exasol.errorreporting.ExaError;
 
 /**
  * This class implements the Sybase SQL dialect.
@@ -110,7 +114,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
     }
 
     @Override
-    public SqlNodeVisitor<String> getSqlGenerationVisitor(final SqlGenerationContext context) {
+    public SqlGenerator getSqlGenerator(final SqlGenerationContext context) {
         return new SybaseSqlGenerationVisitor(this, context);
     }
 
@@ -141,7 +145,8 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         if (value == null) {
             return "NULL";
         } else if (value.contains("\n") || value.contains("\r") || value.contains("\\")) {
-            throw new IllegalArgumentException("Sybase string literal contains illegal characters: \\n or \\r or \\.");
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-VS-SYBASE-2")
+                    .message("Sybase string literal contains illegal characters: \\n or \\r or \\.").toString());
         } else {
             return "'" + value.replace("'", "''") + "'";
         }
@@ -152,13 +157,14 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         try {
             return new BaseRemoteMetadataReader(this.connectionFactory.getConnection(), this.properties);
         } catch (final SQLException exception) {
-            throw new RemoteMetadataReaderException(
-                    "Unable to create Sybase remote metadata reader. Caused by: " + exception.getMessage(), exception);
+            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-SYBASE-1") //
+                    .message("Unable to create Sybase remote metadata reader. Caused by: {{cause}}") //
+                    .parameter("cause", exception.getMessage()).toString(), exception);
         }
     }
 
     @Override
     protected QueryRewriter createQueryRewriter() {
-        return new ImportIntoQueryRewriter(this, createRemoteMetadataReader(), this.connectionFactory);
+        return new ImportIntoTemporaryTableQueryRewriter(this, createRemoteMetadataReader(), this.connectionFactory);
     }
 }
