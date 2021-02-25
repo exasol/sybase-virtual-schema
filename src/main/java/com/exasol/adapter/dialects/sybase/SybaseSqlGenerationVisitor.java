@@ -3,19 +3,19 @@ package com.exasol.adapter.dialects.sybase;
 import static com.exasol.adapter.dialects.sybase.SybaseSqlDialect.MAX_SYBASE_N_VARCHAR_SIZE;
 import static com.exasol.adapter.dialects.sybase.SybaseSqlDialect.MAX_SYBASE_VARCHAR_SIZE;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.exasol.adapter.AdapterException;
-import com.exasol.adapter.dialects.*;
-import com.exasol.adapter.metadata.ColumnMetadata;
-import com.exasol.adapter.metadata.TableMetadata;
+import com.exasol.adapter.dialects.SqlDialect;
+import com.exasol.adapter.dialects.rewriting.SqlGenerationContext;
+import com.exasol.adapter.dialects.rewriting.SqlGenerationVisitor;
 import com.exasol.adapter.sql.*;
 
 /**
  * This class generates SQL queries for the {@link SybaseSqlGenerationVisitor}.
  */
 public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
-    private static final List<String> TYPE_NAMES_REQUIRING_CAST = List.of("text", "time", "bigtime", "xml");
     private static final List<String> TYPE_NAME_NOT_SUPPORTED = List.of("varbinary", "binary", "image");
 
     /**
@@ -28,15 +28,24 @@ public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
         super(dialect, context);
     }
 
-    protected List<String> getListOfTypeNamesRequiringCast() {
-        return TYPE_NAMES_REQUIRING_CAST;
+    private String getCastAs(final String projectionString, final String castType) {
+        return "CAST(" + projectionString + "  as " + castType + " )";
     }
 
-    protected List<String> getListOfTypeNamesNotSupported() {
-        return TYPE_NAME_NOT_SUPPORTED;
+    @Override
+    public String visit(final SqlColumn column) throws AdapterException {
+        final String projectionString = super.visit(column);
+        return getColumnProjectionString(column, projectionString);
     }
 
-    protected String buildColumnProjectionString(final String typeName, final String projectionString) {
+    private String getColumnProjectionString(final SqlColumn column, final String projectionString)
+            throws AdapterException {
+        return super.isDirectlyInSelectList(column) //
+                ? buildColumnProjectionString(getTypeNameFromColumn(column), projectionString) //
+                : projectionString;
+    }
+
+    private String buildColumnProjectionString(final String typeName, final String projectionString) {
         if (typeName.startsWith("text")) {
             return getCastAs(projectionString, "NVARCHAR(" + MAX_SYBASE_N_VARCHAR_SIZE + ")");
         } else if (typeName.equals("time")) {
@@ -50,75 +59,6 @@ public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
         } else {
             return projectionString;
         }
-    }
-
-    private String getCastAs(final String projectionString, final String castType) {
-        return "CAST(" + projectionString + "  as " + castType + " )";
-    }
-
-    @Override
-    protected String representAsteriskInSelectList(final SqlSelectList selectList) throws AdapterException {
-        final List<String> selectStarList = buildSelectStar(selectList);
-        final List<String> selectListElements = new ArrayList<>(selectStarList.size());
-        selectListElements.addAll(selectStarList);
-        return String.join(", ", selectListElements);
-    }
-
-    private List<String> buildSelectStar(final SqlSelectList selectList) throws AdapterException {
-        if (SqlGenerationHelper.selectListRequiresCasts(selectList, this.nodeRequiresCast)) {
-            return buildSelectStarWithNodeCast(selectList);
-        } else {
-            return new ArrayList<>(Collections.singletonList("*"));
-        }
-    }
-
-    private List<String> buildSelectStarWithNodeCast(final SqlSelectList selectList) throws AdapterException {
-        final SqlStatementSelect select = (SqlStatementSelect) selectList.getParent();
-        int columnId = 0;
-        final List<TableMetadata> tableMetadata = new ArrayList<>();
-        SqlGenerationHelper.addMetadata(select.getFromClause(), tableMetadata);
-        final List<String> selectListElements = new ArrayList<>(tableMetadata.size());
-        for (final TableMetadata tableMeta : tableMetadata) {
-            for (final ColumnMetadata columnMeta : tableMeta.getColumns()) {
-                final SqlColumn sqlColumn = new SqlColumn(columnId, columnMeta);
-                selectListElements.add(buildColumnProjectionString(sqlColumn, super.visit(sqlColumn)));
-                ++columnId;
-            }
-        }
-        return selectListElements;
-    }
-
-    private String buildColumnProjectionString(final SqlColumn column, final String projectionString)
-            throws AdapterException {
-        return buildColumnProjectionString(getTypeNameFromColumn(column), projectionString);
-    }
-
-    private final java.util.function.Predicate<SqlNode> nodeRequiresCast = node -> {
-        try {
-            if (node.getType() == SqlNodeType.COLUMN) {
-                final SqlColumn column = (SqlColumn) node;
-                final String typeName = getTypeNameFromColumn(column);
-                return getListOfTypeNamesRequiringCast().contains(typeName)
-                        || getListOfTypeNamesNotSupported().contains(typeName);
-            }
-            return false;
-        } catch (final AdapterException exception) {
-            throw new SqlGenerationVisitorException("Exception during deserialization of ColumnAdapterNotes. ",
-                    exception);
-        }
-    };
-
-    @Override
-    public String visit(final SqlColumn column) throws AdapterException {
-        final String projectionString = super.visit(column);
-        return getColumnProjectionString(column, projectionString);
-    }
-
-    private String getColumnProjectionString(final SqlColumn column, final String projectionString)
-            throws AdapterException {
-        return super.isDirectlyInSelectList(column) //
-                ? buildColumnProjectionString(getTypeNameFromColumn(column), projectionString) //
-                : projectionString;
     }
 
     @Override
