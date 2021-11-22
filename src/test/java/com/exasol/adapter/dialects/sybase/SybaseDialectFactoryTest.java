@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.exasol.adapter.AdapterProperties;
 
-public class SybaseDialectFactoryTest {
+class SybaseDialectFactoryTest {
     private SybaseSqlDialectFactory factory;
 
     @BeforeEach
