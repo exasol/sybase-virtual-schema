@@ -17,16 +17,6 @@ public class SybaseIdentifier implements Identifier {
     }
 
     /**
-     * Get the quoted identifier as a {@link String}.
-     *
-     * @return quoted identifier
-     */
-    @Override
-    public String quote() {
-        return "[" + this.id + "]";
-    }
-
-    /**
      * Create a new {@link SybaseIdentifier}.
      *
      * @param id the identifier as {@link String}
@@ -58,6 +48,16 @@ public class SybaseIdentifier implements Identifier {
     private static boolean validateCharacter(final char ch) {
         return ALLOWED_CHARS.contains(ch) || Character.isDigit(ch) || (ch >= 'a' && ch <= 'z')
                 || (ch >= 'A' && ch <= 'Z');
+    }
+
+    /**
+     * Get the quoted identifier as a {@link String}.
+     *
+     * @return quoted identifier
+     */
+    @Override
+    public String quote() {
+        return "[" + this.id + "]";
     }
 
     @Override

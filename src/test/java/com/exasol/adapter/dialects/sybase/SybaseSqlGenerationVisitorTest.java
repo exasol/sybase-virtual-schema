@@ -29,6 +29,10 @@ import com.exasol.adapter.sql.*;
 class SybaseSqlGenerationVisitorTest {
     private SybaseSqlGenerationVisitor visitor;
 
+    private static SqlNode getTestSqlNode() {
+        return new DialectTestData().getTestSqlNode();
+    }
+
     @BeforeEach
     void beforeEach(@Mock final ConnectionFactory connectionFactoryMock) {
         final SqlDialect dialect = new SybaseSqlDialect(connectionFactoryMock, AdapterProperties.emptyProperties());
@@ -169,10 +173,6 @@ class SybaseSqlGenerationVisitorTest {
         arguments.add(new SqlLiteralString("right"));
         final SqlFunctionScalar sqlFunctionScalar = new SqlFunctionScalar(scalarFunction, arguments);
         assertThat(this.visitor.visit(sqlFunctionScalar), equalTo(expected));
-    }
-
-    private static SqlNode getTestSqlNode() {
-        return new DialectTestData().getTestSqlNode();
     }
 
     private static class DialectTestData {

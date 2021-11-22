@@ -17,6 +17,7 @@ import com.exasol.adapter.sql.*;
  */
 public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
     private static final List<String> TYPE_NAME_NOT_SUPPORTED = List.of("varbinary", "binary", "image");
+    private static final String CAST = "CAST";
 
     /**
      * Create a new instance of the {@link SybaseSqlGenerationVisitor}.
@@ -29,7 +30,7 @@ public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
     }
 
     private String getCastAs(final String projectionString, final String castType) {
-        return "CAST(" + projectionString + "  as " + castType + " )";
+        return CAST + "(" + projectionString + "  as " + castType + " )";
     }
 
     @Override
@@ -143,11 +144,11 @@ public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
         case YEARS_BETWEEN:
             return getDateTimeBetween(function, argumentsSql);
         case CURRENT_DATE:
-            return "CAST( GETDATE() AS DATE)";
+            return CAST + "( GETDATE() AS DATE)";
         case CURRENT_TIMESTAMP:
             return "GETDATE()";
         case SYSDATE:
-            return "CAST( SYSDATETIME() AS DATE)";
+            return CAST + "( SYSDATETIME() AS DATE)";
         case SYSTIMESTAMP:
             return "SYSDATETIME()";
         case ST_X:
@@ -368,12 +369,12 @@ public class SybaseSqlGenerationVisitor extends SqlGenerationVisitor {
     }
 
     private String getScalarFunctionWithVarcharCast(final List<String> argumentsSql, final String function) {
-        return "CAST(" + argumentsSql.get(0) + function + "as VARCHAR(" + MAX_SYBASE_VARCHAR_SIZE + ") )";
+        return CAST + "(" + argumentsSql.get(0) + function + "as VARCHAR(" + MAX_SYBASE_VARCHAR_SIZE + ") )";
     }
 
     private String getScalarFunctionWithVarcharCastTwoArguments(final List<String> argumentsSql,
             final String function) {
-        return "CAST(" + (argumentsSql.get(0) + function + argumentsSql.get(1) + ")") + "as VARCHAR("
+        return CAST + "(" + (argumentsSql.get(0) + function + argumentsSql.get(1) + ")") + "as VARCHAR("
                 + MAX_SYBASE_VARCHAR_SIZE + ") )";
     }
 }

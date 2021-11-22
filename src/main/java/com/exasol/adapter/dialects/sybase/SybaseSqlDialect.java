@@ -32,6 +32,16 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
     static final int MAX_SYBASE_N_VARCHAR_SIZE = 4000;
     private static final Capabilities CAPABILITIES = createCapabilityList();
 
+    /**
+     * Create a new instance of the {@link SybaseSqlDialect}.
+     *
+     * @param connectionFactory factory for the JDBC connection to the remote data source
+     * @param properties        user-defined adapter properties
+     */
+    public SybaseSqlDialect(final ConnectionFactory connectionFactory, final AdapterProperties properties) {
+        super(connectionFactory, properties, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
+    }
+
     private static Capabilities createCapabilityList() {
         return Capabilities.builder()
                 .addMain(SELECTLIST_PROJECTION, SELECTLIST_EXPRESSIONS, FILTER_EXPRESSIONS, AGGREGATE_SINGLE_GROUP,
@@ -57,16 +67,6 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
                         ST_ISSIMPLE, ST_OVERLAPS, ST_SYMDIFFERENCE, ST_TOUCHES, ST_UNION, ST_WITHIN, BIT_AND, BIT_NOT,
                         BIT_OR, BIT_XOR, CASE, HASH_MD5, HASH_SHA1, NULLIFZERO, ZEROIFNULL)
                 .build();
-    }
-
-    /**
-     * Create a new instance of the {@link SybaseSqlDialect}.
-     *
-     * @param connectionFactory factory for the JDBC connection to the remote data source
-     * @param properties        user-defined adapter properties
-     */
-    public SybaseSqlDialect(final ConnectionFactory connectionFactory, final AdapterProperties properties) {
-        super(connectionFactory, properties, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         if (value == null) {
             return "NULL";
         } else if (value.contains("\n") || value.contains("\r") || value.contains("\\")) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-VS-SYBASE-2")
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-VS-SY-2")
                     .message("Sybase string literal contains illegal characters: \\n or \\r or \\.").toString());
         } else {
             return "'" + value.replace("'", "''") + "'";
@@ -157,7 +157,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         try {
             return new BaseRemoteMetadataReader(this.connectionFactory.getConnection(), this.properties);
         } catch (final SQLException exception) {
-            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-SYBASE-1") //
+            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-SY-1") //
                     .message("Unable to create Sybase remote metadata reader. Caused by: {{cause}}") //
                     .parameter("cause", exception.getMessage()).toString(), exception);
         }
