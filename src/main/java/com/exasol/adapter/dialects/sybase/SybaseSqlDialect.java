@@ -1,5 +1,18 @@
 package com.exasol.adapter.dialects.sybase;
 
+import static com.exasol.adapter.AdapterProperties.CATALOG_NAME_PROPERTY;
+import static com.exasol.adapter.AdapterProperties.SCHEMA_NAME_PROPERTY;
+import static com.exasol.adapter.capabilities.AggregateFunctionCapability.*;
+import static com.exasol.adapter.capabilities.LiteralCapability.*;
+import static com.exasol.adapter.capabilities.MainCapability.*;
+import static com.exasol.adapter.capabilities.PredicateCapability.*;
+import static com.exasol.adapter.capabilities.ScalarFunctionCapability.*;
+import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_INTERSECTION;
+import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_UNION;
+
+import java.sql.SQLException;
+import java.util.*;
+
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
 import com.exasol.adapter.dialects.*;
@@ -10,19 +23,6 @@ import com.exasol.adapter.sql.AggregateFunction;
 import com.exasol.adapter.sql.ScalarFunction;
 import com.exasol.errorreporting.ExaError;
 
-import java.sql.SQLException;
-import java.util.*;
-
-import static com.exasol.adapter.AdapterProperties.CATALOG_NAME_PROPERTY;
-import static com.exasol.adapter.AdapterProperties.SCHEMA_NAME_PROPERTY;
-import static com.exasol.adapter.capabilities.AggregateFunctionCapability.*;
-import static com.exasol.adapter.capabilities.LiteralCapability.*;
-import static com.exasol.adapter.capabilities.MainCapability.*;
-import static com.exasol.adapter.capabilities.PredicateCapability.*;
-import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_INTERSECTION;
-import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_UNION;
-import static com.exasol.adapter.capabilities.ScalarFunctionCapability.*;
-
 /**
  * This class implements the Sybase SQL dialect.
  */
@@ -31,6 +31,16 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
     static final int MAX_SYBASE_VARCHAR_SIZE = 8000;
     static final int MAX_SYBASE_N_VARCHAR_SIZE = 4000;
     private static final Capabilities CAPABILITIES = createCapabilityList();
+
+    /**
+     * Create a new instance of the {@link SybaseSqlDialect}.
+     *
+     * @param connectionFactory factory for the JDBC connection to the remote data source
+     * @param properties        user-defined adapter properties
+     */
+    public SybaseSqlDialect(final ConnectionFactory connectionFactory, final AdapterProperties properties) {
+        super(connectionFactory, properties, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
+    }
 
     private static Capabilities createCapabilityList() {
         return Capabilities.builder()
@@ -57,16 +67,6 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
                         ST_ISSIMPLE, ST_OVERLAPS, ST_SYMDIFFERENCE, ST_TOUCHES, ST_UNION, ST_WITHIN, BIT_AND, BIT_NOT,
                         BIT_OR, BIT_XOR, CASE, HASH_MD5, HASH_SHA1, NULLIFZERO, ZEROIFNULL)
                 .build();
-    }
-
-    /**
-     * Create a new instance of the {@link SybaseSqlDialect}.
-     *
-     * @param connectionFactory factory for the JDBC connection to the remote data source
-     * @param properties        user-defined adapter properties
-     */
-    public SybaseSqlDialect(final ConnectionFactory connectionFactory, final AdapterProperties properties) {
-        super(connectionFactory, properties, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
     }
 
     @Override
