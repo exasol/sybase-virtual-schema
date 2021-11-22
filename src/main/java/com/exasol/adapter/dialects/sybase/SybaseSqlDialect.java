@@ -1,18 +1,5 @@
 package com.exasol.adapter.dialects.sybase;
 
-import static com.exasol.adapter.AdapterProperties.CATALOG_NAME_PROPERTY;
-import static com.exasol.adapter.AdapterProperties.SCHEMA_NAME_PROPERTY;
-import static com.exasol.adapter.capabilities.AggregateFunctionCapability.*;
-import static com.exasol.adapter.capabilities.LiteralCapability.*;
-import static com.exasol.adapter.capabilities.MainCapability.*;
-import static com.exasol.adapter.capabilities.PredicateCapability.*;
-import static com.exasol.adapter.capabilities.ScalarFunctionCapability.*;
-import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_INTERSECTION;
-import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_UNION;
-
-import java.sql.SQLException;
-import java.util.*;
-
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
 import com.exasol.adapter.dialects.*;
@@ -22,6 +9,19 @@ import com.exasol.adapter.jdbc.*;
 import com.exasol.adapter.sql.AggregateFunction;
 import com.exasol.adapter.sql.ScalarFunction;
 import com.exasol.errorreporting.ExaError;
+
+import java.sql.SQLException;
+import java.util.*;
+
+import static com.exasol.adapter.AdapterProperties.CATALOG_NAME_PROPERTY;
+import static com.exasol.adapter.AdapterProperties.SCHEMA_NAME_PROPERTY;
+import static com.exasol.adapter.capabilities.AggregateFunctionCapability.*;
+import static com.exasol.adapter.capabilities.LiteralCapability.*;
+import static com.exasol.adapter.capabilities.MainCapability.*;
+import static com.exasol.adapter.capabilities.PredicateCapability.*;
+import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_INTERSECTION;
+import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_UNION;
+import static com.exasol.adapter.capabilities.ScalarFunctionCapability.*;
 
 /**
  * This class implements the Sybase SQL dialect.
@@ -145,7 +145,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         if (value == null) {
             return "NULL";
         } else if (value.contains("\n") || value.contains("\r") || value.contains("\\")) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-VS-SYBASE-2")
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-VS-SY-2")
                     .message("Sybase string literal contains illegal characters: \\n or \\r or \\.").toString());
         } else {
             return "'" + value.replace("'", "''") + "'";
@@ -157,7 +157,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         try {
             return new BaseRemoteMetadataReader(this.connectionFactory.getConnection(), this.properties);
         } catch (final SQLException exception) {
-            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-SYBASE-1") //
+            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-SY-1") //
                     .message("Unable to create Sybase remote metadata reader. Caused by: {{cause}}") //
                     .parameter("cause", exception.getMessage()).toString(), exception);
         }
