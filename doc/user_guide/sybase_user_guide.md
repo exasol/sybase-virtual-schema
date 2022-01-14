@@ -2,7 +2,7 @@
 
 [SAP ASE](https://www.sap.com/products/sybase-ase.html), originally known as Sybase SQL Server is a relational model database server developed by Sybase Corporation, which later became part of SAP AG.
 
-**!!! Important: This virtual schema implementation doesn't work with Sybase IQ !!!**
+**Please note that this Virtual Schema works only for the Sybase ASE database and not Sybase IQ.**
 
 ## Registering the JDBC Driver in EXAOperation
 
