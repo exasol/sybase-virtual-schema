@@ -145,7 +145,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         if (value == null) {
             return "NULL";
         } else if (value.contains("\n") || value.contains("\r") || value.contains("\\")) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-VS-SY-2")
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-VSSY-2")
                     .message("Sybase string literal contains illegal characters: \\n or \\r or \\.").toString());
         } else {
             return "'" + value.replace("'", "''") + "'";
@@ -157,7 +157,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
         try {
             return new BaseRemoteMetadataReader(this.connectionFactory.getConnection(), this.properties);
         } catch (final SQLException exception) {
-            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-SY-1") //
+            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VSSY-1") //
                     .message("Unable to create Sybase remote metadata reader. Caused by: {{cause}}") //
                     .parameter("cause", exception.getMessage()).toString(), exception);
         }

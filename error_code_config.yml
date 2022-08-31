@@ -1,5 +1,5 @@
 error-tags:
-  VS-SY:
+  VSSY:
     packages:
       - com.exasol.adapter.dialects.sybase
-    highest-index: 0
+    highest-index: 2
