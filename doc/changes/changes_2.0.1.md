@@ -12,6 +12,17 @@ This release upgrades dependencies
 
 ## Dependency Updates
 
+### Compile Dependency Updates
+
+* Updated `com.exasol:virtual-schema-common-jdbc:9.0.4` to `9.0.5`
+
+### Test Dependency Updates
+
+* Updated `com.exasol:virtual-schema-common-jdbc:9.0.4` to `9.0.5`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.7.2` to `3.10.1`
+* Updated `org.junit.jupiter:junit-jupiter:5.8.1` to `5.9.0`
+* Updated `org.mockito:mockito-junit-jupiter:4.1.0` to `4.7.0`
+
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:artifact-reference-checker-maven-plugin:0.3.1` to `0.4.0`
