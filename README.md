@@ -16,7 +16,7 @@
 
 # Overview
 
-The **Sybase Virtual Schema** provides an abstraction layer that makes an external [Sybase](https://www.sap.com/products/sybase-ase.html) database accessible from an Exasol database through regular SQL commands. The contents of the external Sybase database are mapped to virtual tables which look like and can be queried as any regular Exasol table.
+The **Sybase Virtual Schema** provides an abstraction layer that makes an external [Sybase](https://www.sap.com/products/technology-platform/sybase-ase.html) database accessible from an Exasol database through regular SQL commands. The contents of the external Sybase database are mapped to virtual tables which look like and can be queried as any regular Exasol table.
 
 **Please note that this Virtual Schema works only for the Sybase ASE database and not Sybase IQ.**
 
