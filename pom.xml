@@ -18,7 +18,7 @@
         </snapshotRepository>
     </distributionManagement>
     <properties>
-        <vscjdbc.version>10.1.0</vscjdbc.version>
+        <vscjdbc.version>12.0.0</vscjdbc.version>
     </properties>
     <repositories>
         <repository>
@@ -69,19 +69,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.9.2</version>
+            <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.1.1</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.13.1</version>
+            <version>3.15.8</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -97,7 +97,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.9.3</version>
+                <version>4.2.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -105,6 +105,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                        <arg>-Werror</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
