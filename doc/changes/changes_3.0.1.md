@@ -36,13 +36,12 @@ Updated Runner OS on GitHub to Ubuntu 24.04, matrix test Exasol versions to 8.34
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.16`
 * Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
 * Updated `org.apache.maven.plugins:maven-assembly-plugin:3.6.0` to `3.7.1`
-* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.1`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:3.2.0` to `3.4.1`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.12.1` to `3.14.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.1` to `3.5.0`
-* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.4`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.2` to `3.1.4`
 * Updated `org.apache.maven.plugins:maven-jar-plugin:3.3.0` to `3.4.2`
-* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
-* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.21.0`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.12.1` to `3.21.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.2`
 * Updated `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0` to `3.2.0`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.6.0` to `1.7.0`
