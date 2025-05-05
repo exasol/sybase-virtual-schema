@@ -6,6 +6,8 @@ Code name: Dependency Updates on top of 3.0.0
 
 We updated the dependencies on top of version 3.0.0 and added an OSSIndex reporting exception for CVE-2024-55551 which was fixed in the Exasol JDBC driver 24.2.1 but still has no fix version set in the OSSIndex.
 
+Updated Runner OS on GitHub to Ubuntu 24.04, matrix test Exasol versions to 8.34.0 and 7.1.30.
+
 ## Features
 
 * #23: Updated dependencies, added reporting exception for CVE-2024-55551
