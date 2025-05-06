@@ -3,39 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>sybase-virtual-schema</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>Virtual Schema for Sybase</name>
     <description>Virtual Schema for connecting Sybase as a data source to Exasol</description>
     <url>https://github.com/exasol/sybase-virtual-schema/</url>
-    <distributionManagement>
-        <repository>
-            <id>maven.exasol.com</id>
-            <url>https://maven.exasol.com/artifactory/exasol-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven.exasol.com</id>
-            <url>https://maven.exasol.com/artifactory/exasol-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
     <properties>
-        <vscjdbc.version>12.0.0</vscjdbc.version>
+        <vscjdbc.version>12.0.1</vscjdbc.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>maven.exasol.com</id>
-            <url>https://maven.exasol.com/artifactory/exasol-releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>maven.exasol.com-snapshots</id>
-            <url>https://maven.exasol.com/artifactory/exasol-snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -63,25 +37,31 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
+            <version>3.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.10.2</version>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.12.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.12.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.11.0</version>
+            <version>5.17.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.15.8</version>
+            <version>3.19.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -97,7 +77,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.2.0</version>
+                <version>5.0.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -116,12 +96,22 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.ossindex.maven</groupId>
+                <artifactId>ossindex-maven-plugin</artifactId>
+                <configuration>
+                    <excludeVulnerabilityIds>
+                        <!-- Exasol JDBC driver 24.2.1 and later are fixed, but the fix version is not set in the OSSIndex -->
+                        <excludeVulnerabilityId>CVE-2024-55551</excludeVulnerabilityId>
+                    </excludeVulnerabilityIds>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <parent>
         <artifactId>sybase-virtual-schema-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
 </project>
