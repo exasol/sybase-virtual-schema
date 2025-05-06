@@ -1,4 +1,4 @@
-# Virtual Schema for Sybase 3.0.1, released 2025-05-05
+# Virtual Schema for Sybase 3.0.1, released 2025-05-06
 
 Code name: Dependency Updates on top of 3.0.0
 
