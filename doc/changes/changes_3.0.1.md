@@ -23,7 +23,9 @@ Updated Runner OS on GitHub to Ubuntu 24.04, matrix test Exasol versions to 8.34
 * Updated `com.exasol:virtual-schema-common-jdbc:12.0.0` to `12.0.1`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.19.4`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
-* Updated `org.junit.jupiter:junit-jupiter:5.10.2` to `5.12.2`
+* Added `org.junit.jupiter:junit-jupiter-api:5.12.2`
+* Added `org.junit.jupiter:junit-jupiter-params:5.12.2`
+* Removed `org.junit.jupiter:junit-jupiter:5.10.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.11.0` to `5.17.0`
 
 ### Plugin Dependency Updates

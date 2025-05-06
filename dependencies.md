@@ -15,7 +15,8 @@
 | ------------------------------------------ | --------------------------------- |
 | [Virtual Schema Common JDBC][0]            | [MIT License][1]                  |
 | [Hamcrest][6]                              | [BSD-3-Clause][7]                 |
-| [JUnit Jupiter (Aggregator)][8]            | [Eclipse Public License v2.0][9]  |
+| [JUnit Jupiter API][8]                     | [Eclipse Public License v2.0][9]  |
+| [JUnit Jupiter Params][8]                  | [Eclipse Public License v2.0][9]  |
 | [mockito-junit-jupiter][10]                | [MIT][11]                         |
 | [EqualsVerifier \| release normal jar][12] | [Apache License, Version 2.0][13] |
 
