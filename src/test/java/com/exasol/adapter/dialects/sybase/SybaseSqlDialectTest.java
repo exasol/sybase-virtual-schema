@@ -40,12 +40,12 @@ class SybaseSqlDialectTest {
 
     @BeforeEach
     void beforeEach() {
-        this.dialect = new SybaseSqlDialect(createContext(AdapterProperties.emptyProperties()));
+        this.dialect = testee(AdapterProperties.emptyProperties());
         this.rawProperties = new HashMap<>();
     }
 
-    private static JDBCAdapterContext createContext(final AdapterProperties properties) {
-        return JDBCAdapterContext.builder().properties(properties).build();
+    private SybaseSqlDialect testee(final AdapterProperties properties) {
+        return new SybaseSqlDialect(JDBCAdapterContext.builder().properties(properties).build());
     }
 
     @Test
@@ -87,7 +87,7 @@ class SybaseSqlDialectTest {
         setMandatoryProperties();
         this.rawProperties.put(CATALOG_NAME_PROPERTY, "MY_CATALOG");
         final AdapterProperties adapterProperties = new AdapterProperties(this.rawProperties);
-        final SqlDialect sqlDialect = new SybaseSqlDialect(createContext(adapterProperties));
+        final SqlDialect sqlDialect = testee(adapterProperties);
         sqlDialect.validateProperties();
     }
 
@@ -96,7 +96,7 @@ class SybaseSqlDialectTest {
         setMandatoryProperties();
         this.rawProperties.put(SCHEMA_NAME_PROPERTY, "MY_SCHEMA");
         final AdapterProperties adapterProperties = new AdapterProperties(this.rawProperties);
-        final SqlDialect sqlDialect = new SybaseSqlDialect(createContext(adapterProperties));
+        final SqlDialect sqlDialect = testee(adapterProperties);
         sqlDialect.validateProperties();
     }
 
