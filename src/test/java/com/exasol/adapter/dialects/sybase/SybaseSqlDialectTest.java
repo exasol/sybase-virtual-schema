@@ -9,38 +9,62 @@ import static com.exasol.adapter.capabilities.PredicateCapability.*;
 import static com.exasol.adapter.capabilities.ScalarFunctionCapability.*;
 import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_INTERSECTION;
 import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_UNION;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.ExaMetadata;
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
-import com.exasol.adapter.dialects.SqlDialect;
+import com.exasol.adapter.dialects.*;
+import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
+import com.exasol.adapter.jdbc.*;
 import com.exasol.adapter.properties.PropertyValidationException;
 import com.exasol.adapter.sql.AggregateFunction;
 import com.exasol.adapter.sql.ScalarFunction;
 
+@ExtendWith(MockitoExtension.class)
 class SybaseSqlDialectTest {
-    private SqlDialect dialect;
+    private SybaseSqlDialect dialect;
     private Map<String, String> rawProperties;
+    @Mock
+    ConnectionFactory connectionFactoryMock;
+    @Mock
+    ExaMetadata exaMetadataMock;
 
     @BeforeEach
     void beforeEach() {
-        this.dialect = new SybaseSqlDialect(null, AdapterProperties.emptyProperties());
+        this.dialect = testee(AdapterProperties.emptyProperties());
         this.rawProperties = new HashMap<>();
+    }
+
+    private SybaseSqlDialect testee(final AdapterProperties properties) {
+        return new SybaseSqlDialect(JDBCAdapterContext.builder()
+                .connectionFactory(connectionFactoryMock)
+                .properties(properties)
+                .metadata(exaMetadataMock).build());
+    }
+
+    @Test
+    void testGetName() {
+        assertThat(this.dialect.getName(), equalTo("SYBASE"));
     }
 
     @Test
@@ -82,7 +106,7 @@ class SybaseSqlDialectTest {
         setMandatoryProperties();
         this.rawProperties.put(CATALOG_NAME_PROPERTY, "MY_CATALOG");
         final AdapterProperties adapterProperties = new AdapterProperties(this.rawProperties);
-        final SqlDialect sqlDialect = new SybaseSqlDialect(null, adapterProperties);
+        final SqlDialect sqlDialect = testee(adapterProperties);
         sqlDialect.validateProperties();
     }
 
@@ -91,7 +115,7 @@ class SybaseSqlDialectTest {
         setMandatoryProperties();
         this.rawProperties.put(SCHEMA_NAME_PROPERTY, "MY_SCHEMA");
         final AdapterProperties adapterProperties = new AdapterProperties(this.rawProperties);
-        final SqlDialect sqlDialect = new SybaseSqlDialect(null, adapterProperties);
+        final SqlDialect sqlDialect = testee(adapterProperties);
         sqlDialect.validateProperties();
     }
 
@@ -159,7 +183,7 @@ class SybaseSqlDialectTest {
 
     @Test
     void testGetLiteralStringNull() {
-        assertThat(this.dialect.getStringLiteral(null), CoreMatchers.equalTo("NULL"));
+        assertThat(this.dialect.getStringLiteral(null), equalTo("NULL"));
     }
 
     @Test
@@ -179,7 +203,21 @@ class SybaseSqlDialectTest {
 
     @Test
     void testGetSqlGenerationVisitor() {
-        assertThat(this.dialect.getSqlGenerator(null), CoreMatchers.instanceOf(SybaseSqlGenerationVisitor.class));
+        assertThat(this.dialect.getSqlGenerator(null), instanceOf(SybaseSqlGenerationVisitor.class));
+    }
+
+    @Test
+    void testCreateRemoteMetadataReader() {
+        when(exaMetadataMock.getDatabaseVersion()).thenReturn("3.2.1");
+        final RemoteMetadataReader reader = dialect.createRemoteMetadataReader();
+        assertThat(reader, instanceOf(BaseRemoteMetadataReader.class));
+    }
+
+    @Test
+    void testCreateQueryRewriter() {
+        when(exaMetadataMock.getDatabaseVersion()).thenReturn("3.2.1");
+        final QueryRewriter queryRewriter = dialect.createQueryRewriter();
+        assertThat(queryRewriter, instanceOf(ImportIntoTemporaryTableQueryRewriter.class));
     }
 
     @Test

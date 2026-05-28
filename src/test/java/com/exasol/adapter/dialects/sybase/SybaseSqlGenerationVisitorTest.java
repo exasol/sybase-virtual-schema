@@ -15,10 +15,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.ExaMetadata;
 import com.exasol.adapter.AdapterException;
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.adapternotes.ColumnAdapterNotes;
 import com.exasol.adapter.adapternotes.ColumnAdapterNotesJsonConverter;
+import com.exasol.adapter.dialects.JDBCAdapterContext;
 import com.exasol.adapter.dialects.SqlDialect;
 import com.exasol.adapter.dialects.rewriting.SqlGenerationContext;
 import com.exasol.adapter.jdbc.ConnectionFactory;
@@ -34,8 +36,10 @@ class SybaseSqlGenerationVisitorTest {
     }
 
     @BeforeEach
-    void beforeEach(@Mock final ConnectionFactory connectionFactoryMock) {
-        final SqlDialect dialect = new SybaseSqlDialect(connectionFactoryMock, AdapterProperties.emptyProperties());
+    void beforeEach(@Mock final ConnectionFactory connectionFactoryMock, @Mock final ExaMetadata exaMetadataMock) {
+        final SqlDialect dialect = new SybaseSqlDialect(JDBCAdapterContext.builder()
+                .connectionFactory(connectionFactoryMock).properties(AdapterProperties.emptyProperties())
+                .metadata(exaMetadataMock).build());
         final SqlGenerationContext context = new SqlGenerationContext("test_catalog", "test_schema", false);
         this.visitor = new SybaseSqlGenerationVisitor(dialect, context);
     }
