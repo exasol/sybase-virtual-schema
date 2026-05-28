@@ -13,7 +13,6 @@ import static com.exasol.adapter.capabilities.ScalarFunctionCapability.ST_UNION;
 import java.sql.SQLException;
 import java.util.*;
 
-import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
 import com.exasol.adapter.dialects.*;
 import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
@@ -35,11 +34,10 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
     /**
      * Create a new instance of the {@link SybaseSqlDialect}.
      *
-     * @param connectionFactory factory for the JDBC connection to the remote data source
-     * @param properties        user-defined adapter properties
+     * @param context context of the SQL dialect
      */
-    public SybaseSqlDialect(final ConnectionFactory connectionFactory, final AdapterProperties properties) {
-        super(connectionFactory, properties, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
+    public SybaseSqlDialect(final JDBCAdapterContext context) {
+        super(context, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
     }
 
     private static Capabilities createCapabilityList() {
@@ -155,7 +153,7 @@ public class SybaseSqlDialect extends AbstractSqlDialect {
     @Override
     protected RemoteMetadataReader createRemoteMetadataReader() {
         try {
-            return new BaseRemoteMetadataReader(this.connectionFactory.getConnection(), this.properties);
+            return new BaseRemoteMetadataReader(this.connectionFactory.getConnection(), this.properties, this.exaMetadata);
         } catch (final SQLException exception) {
             throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VSSY-1") //
                     .message("Unable to create Sybase remote metadata reader. Caused by: {{cause}}") //

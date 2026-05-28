@@ -4,37 +4,38 @@
 
 **Please note that this Virtual Schema works only for the Sybase ASE database and not Sybase IQ.**
 
-## Registering the JDBC Driver in EXAOperation
+## Telemetry
 
-First download the [Sybase JDBC driver](https://sourceforge.net/projects/jtds/). Open the archive and find `jtds-<version>.jar` file.
+This virtual schema uses `telemetry-java` to send anonymous feature-usage events.
 
-**Attention!** If you use Exasol 7.0.0 and up, you need to register the driver in EXAOperation. If you use Exasol below 7.0.0, you can skip this step and go to [Uploading the JDBC Driver to Bucket](#uploading-the-jdbc-driver-to-bucket).
+For details on what is collected and how to disable telemetry, see the [documentation](https://github.com/exasol/telemetry-java/blob/main/doc/app-user-guide.md).
 
-Register the driver in EXAOperation:
+## Uploading the JDBC Driver to Exasol BucketFS
 
-1. Click "Software"
-1. Switch to tab "JDBC Drivers"
-1. Click "Browse..."
-1. Select JDBC driver file
-1. Click "Upload"
-1. Click "Add"
-1. In a dialog "Add EXACluster JDBC driver" configure the JDBC driver (see below)
+1. Download the [Sybase JDBC driver](https://sourceforge.net/projects/jtds/).
+2. Upload the driver to BucketFS, see [BucketFS documentation](https://docs.exasol.com/db/latest/administration/on-premise/bucketfs/accessfiles.htm).
 
-You need to specify the following settings when adding the JDBC driver via EXAOperation.
+    Hint: Put the driver into folder `default/drivers/jdbc/` to register it for [ExaLoader](#registering-the-jdbc-driver-for-exaloader), too.
 
-| Parameter | Value                              |
-|-----------|------------------------------------|
-| Name      | `SYBASE`                           |
-| Main      | `net.sourceforge.jtds.jdbc.Driver` |
-| Prefix    | `jdbc:jtds:sybase:`                |
-| Files     | `jtds-<version>.jar`               |
+## Registering the JDBC driver for ExaLoader
 
-## Uploading the JDBC Driver to Bucket
+In order to enable the ExaLoader to fetch data from the external database you must register the driver for ExaLoader as described in the [Installation procedure for JDBC drivers](https://github.com/exasol/docker-db/#installing-custom-jdbc-drivers).
+1. ExaLoader expects the driver in BucketFS folder `default/drivers/jdbc`.
 
-1. [Create a bucket in BucketFS](https://docs.exasol.com/administration/on-premise/bucketfs/create_new_bucket_in_bucketfs_service.htm)
-1. Upload the driver (`jtds-<version>.jar`) to BucketFS
+   If you uploaded the driver for UDF to a different folder, then you need to [upload](#uploading-the-jdbc-driver-to-exasol-bucketfs) the driver again.
+2. Additionally  you need to create file `settings.cfg` and [upload](#uploading-the-jdbc-driver-to-exasol-bucketfs) it to the same folder in BucketFS:
 
-This step is necessary since the UDF container the adapter runs in has no access to the JDBC drivers installed via EXAOperation but it can access BucketFS.
+   ```properties
+   DRIVERNAME=SYBASE
+   JAR=jtds-<version>.jar
+   DRIVERMAIN=net.sourceforge.jtds.jdbc.Driver
+   PREFIX=jdbc:jtds:sybase:
+   NOSECURITY=YES
+   FETCHSIZE=100000
+   INSERTSIZE=-1
+   
+   ```
+   Ensure that the file ends with a trailing newline.
 
 ## Installing the Adapter Script
 
@@ -51,7 +52,7 @@ The SQL statement below creates the adapter script, defines the Java class that 
 ```sql
 CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
   %scriptclass com.exasol.adapter.RequestDispatcher;
-  %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-12.0.1-sybase-3.0.1.jar;
+  %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-14.0.2-sybase-4.0.0.jar;
   %jar /buckets/<BFS service>/<bucket>/jtds-<version>.jar;
 /
 ```

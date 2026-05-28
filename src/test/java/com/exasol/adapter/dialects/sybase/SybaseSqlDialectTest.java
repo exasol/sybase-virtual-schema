@@ -28,6 +28,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
+import com.exasol.adapter.dialects.JDBCAdapterContext;
 import com.exasol.adapter.dialects.SqlDialect;
 import com.exasol.adapter.properties.PropertyValidationException;
 import com.exasol.adapter.sql.AggregateFunction;
@@ -39,8 +40,12 @@ class SybaseSqlDialectTest {
 
     @BeforeEach
     void beforeEach() {
-        this.dialect = new SybaseSqlDialect(null, AdapterProperties.emptyProperties());
+        this.dialect = new SybaseSqlDialect(createContext(AdapterProperties.emptyProperties()));
         this.rawProperties = new HashMap<>();
+    }
+
+    private static JDBCAdapterContext createContext(final AdapterProperties properties) {
+        return JDBCAdapterContext.builder().properties(properties).build();
     }
 
     @Test
@@ -82,7 +87,7 @@ class SybaseSqlDialectTest {
         setMandatoryProperties();
         this.rawProperties.put(CATALOG_NAME_PROPERTY, "MY_CATALOG");
         final AdapterProperties adapterProperties = new AdapterProperties(this.rawProperties);
-        final SqlDialect sqlDialect = new SybaseSqlDialect(null, adapterProperties);
+        final SqlDialect sqlDialect = new SybaseSqlDialect(createContext(adapterProperties));
         sqlDialect.validateProperties();
     }
 
@@ -91,7 +96,7 @@ class SybaseSqlDialectTest {
         setMandatoryProperties();
         this.rawProperties.put(SCHEMA_NAME_PROPERTY, "MY_SCHEMA");
         final AdapterProperties adapterProperties = new AdapterProperties(this.rawProperties);
-        final SqlDialect sqlDialect = new SybaseSqlDialect(null, adapterProperties);
+        final SqlDialect sqlDialect = new SybaseSqlDialect(createContext(adapterProperties));
         sqlDialect.validateProperties();
     }
 

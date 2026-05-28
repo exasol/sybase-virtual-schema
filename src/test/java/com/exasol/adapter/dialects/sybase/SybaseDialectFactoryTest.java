@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.adapter.AdapterProperties;
+import com.exasol.adapter.dialects.JDBCAdapterContext;
 
 class SybaseDialectFactoryTest {
     private SybaseSqlDialectFactory factory;
@@ -24,7 +25,19 @@ class SybaseDialectFactoryTest {
 
     @Test
     void testCreateDialect() {
-        assertThat(this.factory.createSqlDialect(null, AdapterProperties.emptyProperties()),
-                instanceOf(SybaseSqlDialect.class));
+        final JDBCAdapterContext context = JDBCAdapterContext.builder().properties(AdapterProperties.emptyProperties())
+                .build();
+        assertThat(this.factory.createSqlDialect(context), instanceOf(SybaseSqlDialect.class));
+    }
+
+    @Test
+    void testGetSqlDialectVersion() {
+        // Version only availble in built artifact
+        assertThat(this.factory.getSqlDialectVersion(), equalTo("UNKNOWN"));
+    }
+
+    @Test
+    void testGetAdapterProjectShortTag() {
+        assertThat(this.factory.getAdapterProjectShortTag(), equalTo("VSSY"));
     }
 }
