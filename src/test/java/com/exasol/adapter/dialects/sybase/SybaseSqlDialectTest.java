@@ -42,7 +42,7 @@ import com.exasol.adapter.sql.ScalarFunction;
 
 @ExtendWith(MockitoExtension.class)
 class SybaseSqlDialectTest {
-    private SqlDialect dialect;
+    private SybaseSqlDialect dialect;
     private Map<String, String> rawProperties;
     @Mock
     ConnectionFactory connectionFactoryMock;
@@ -51,12 +51,8 @@ class SybaseSqlDialectTest {
 
     @BeforeEach
     void beforeEach() {
-        this.dialect = testee();
+        this.dialect = testee(AdapterProperties.emptyProperties());
         this.rawProperties = new HashMap<>();
-    }
-
-    private SybaseSqlDialect testee() {
-        return testee(AdapterProperties.emptyProperties());
     }
 
     private SybaseSqlDialect testee(final AdapterProperties properties) {
@@ -213,14 +209,14 @@ class SybaseSqlDialectTest {
     @Test
     void testCreateRemoteMetadataReader() {
         when(exaMetadataMock.getDatabaseVersion()).thenReturn("3.2.1");
-        final RemoteMetadataReader reader = testee().createRemoteMetadataReader();
+        final RemoteMetadataReader reader = dialect.createRemoteMetadataReader();
         assertThat(reader, instanceOf(BaseRemoteMetadataReader.class));
     }
 
     @Test
     void testCreateQueryRewriter() {
         when(exaMetadataMock.getDatabaseVersion()).thenReturn("3.2.1");
-        final QueryRewriter queryRewriter = testee().createQueryRewriter();
+        final QueryRewriter queryRewriter = dialect.createQueryRewriter();
         assertThat(queryRewriter, instanceOf(ImportIntoTemporaryTableQueryRewriter.class));
     }
 
