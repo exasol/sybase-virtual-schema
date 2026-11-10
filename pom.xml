@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>sybase-virtual-schema</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <name>Virtual Schema for Sybase</name>
     <description>Virtual Schema for connecting Sybase as a data source to Exasol</description>
     <url>https://github.com/exasol/sybase-virtual-schema/</url>
     <properties>
-        <vscjdbc.version>14.0.2</vscjdbc.version>
+        <vscjdbc.version>14.1.1</vscjdbc.version>
     </properties>
     <dependencies>
         <dependency>
@@ -50,8 +50,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.23.0</version>
+            <version>5.24.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Pin transitive dependency of Mockito to fix CVE-2026-116486 -->
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>3.6</version>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
@@ -73,7 +79,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.6.2</version>
+                <version>5.8.2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -87,7 +93,7 @@
     <parent>
         <artifactId>sybase-virtual-schema-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
 </project>
