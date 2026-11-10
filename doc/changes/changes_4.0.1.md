@@ -1,14 +1,32 @@
-# Virtual Schema for Sybase 4.0.1, released 2026-??-??
+# Virtual Schema for Sybase 4.0.1, released 2026-11-10
 
-Code name:
+Code name: SonarCloud coverage
 
 ## Summary
 
-## Features
+Fixed the SonarCloud coverage setup and updated Project Keeper to version 5.8.
 
-* ISSUE_NUMBER: description
+Fixed CVE-2026-116486 in test code by updating transitive dependency. Users are not required to update the virtual schema.
+
+## Refactoring
+
+* Updated to Project Keeper 5.8
+
+## Security
+
+* Pin transitive dependency `org.objenesis:objenesis:3.6` of Mockito to fix CVE-2026-116486
 
 ## Dependency Updates
+
+### Compile Dependency Updates
+
+* Updated `com.exasol:virtual-schema-common-jdbc:14.0.2` to `14.1.1`
+* Added `org.objenesis:objenesis:3.6`
+
+### Test Dependency Updates
+
+* Updated `com.exasol:virtual-schema-common-jdbc:14.0.2` to `14.1.1`
+* Updated `org.mockito:mockito-junit-jupiter:5.23.0` to `5.24.0`
 
 ### Plugin Dependency Updates
 
